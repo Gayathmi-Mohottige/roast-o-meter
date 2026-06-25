@@ -579,8 +579,42 @@ $("undo").addEventListener("click",undo);
 document.addEventListener("keydown",e=>{ if((e.key==="+"||e.key==="=")&&document.activeElement.tagName!=="INPUT"){ e.preventDefault(); hit(); } });
 const sb=$("soundBtn"); sb.textContent="🔊 SFX: "+(state.sound?"ON":"OFF");
 sb.addEventListener("click",()=>{ state.sound=!state.sound; sb.textContent="🔊 SFX: "+(state.sound?"ON":"OFF"); save(); if(state.sound) hitSfx(); });
+
+// --- FIRST VISIT AUTOMATIC MUSIC LOGIC ---
 const mb=$("musicBtn");
-mb.addEventListener("click",()=>{ if(musicOn){ stopMusic(); mb.textContent="🎵 Music: OFF"; } else { startMusic(); mb.textContent="🎵 Music: ON"; } });
+let musicStarted = false;
+
+// 1. Force music button to say ON by default on layout initialization
+mb.textContent = "🎵 Music: ON";
+musicOn = true;
+
+// 2. Setup a trigger helper to handle browser permission safely on user interaction
+const triggerMusicOnInteraction = () => {
+  if (musicOn && !musicStarted) {
+    startMusic();
+    musicStarted = true;
+  }
+  // Clear the event tracking immediately so this loop only fires once per visit
+  document.removeEventListener("click", triggerMusicOnInteraction);
+  document.removeEventListener("keydown", triggerMusicOnInteraction);
+};
+
+// 3. Listen everywhere on the window frame to snatch the initial permission token
+document.addEventListener("click", triggerMusicOnInteraction);
+document.addEventListener("keydown", triggerMusicOnInteraction);
+
+// 4. Handle traditional, isolated manual toggles via the status button layout
+mb.addEventListener("click",(e)=>{
+  e.stopPropagation(); // Stop the event from triggering the document-wide listener above
+  if(musicOn){ 
+    stopMusic(); 
+    mb.textContent="🎵 Music: OFF"; 
+  } else { 
+    startMusic(); 
+    musicStarted = true;
+    mb.textContent="🎵 Music: ON"; 
+  }
+});
 
 // First initial render (before Firebase loads, just in case)
 renderAll(); updateMascot();
