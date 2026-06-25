@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>ROAST-O-METER 9000</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,12 +21,18 @@
   }
   *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
 
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+    width: 100%;
+  }
+
   body{
     font-family:"Fredoka", system-ui, sans-serif;
     color:var(--ink);
     min-height:100vh;
     position:relative;
-    overflow-x:hidden;
+    touch-action: pan-y; /* Stops accidental horizontal dragging/swiping on mobile views */
     background:
       radial-gradient(rgba(255,255,255,0.16) 1.6px, transparent 1.7px) 0 0 / 15px 15px,
       linear-gradient(150deg, #FF5BA0 0%, #FF7A3D 24%, #FFD23F 46%, #37E089 70%, #33B5FF 100%);
@@ -242,7 +248,9 @@
   /* footer */
   .footer{ margin-top:50px; display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; align-items:center; }
   .foot-note{ font-weight:700; font-size:13px; background:#fff; border:3px solid var(--ink); border-radius:999px; padding:7px 14px; box-shadow:3px 3px 0 var(--ink); transform:rotate(-1deg); }
-  .controls{ display:flex; gap:10px; flex-wrap:wrap; }
+  
+  /* controls section (moved to top styling) */
+  .controls{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin: 18px auto 4px; position: relative; z-index: 10; }
   .ctrl{ font-family:"Fredoka",sans-serif; font-weight:700; font-size:13px; background:#fff; border:3px solid var(--ink); border-radius:999px; padding:8px 16px; cursor:pointer; box-shadow:3px 3px 0 var(--ink); }
   .ctrl:active{ transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink); }
   .ctrl.armed{ background:var(--red); color:#fff; }
@@ -266,6 +274,11 @@
         <span class="kicker">the petty scoreboard · every roast goes on the global record</span>
         <h1>ROAST-O-METER<br><span class="nine">9000</span></h1>
         <p class="pitch">DEVs talked junk? <b>SMASH</b> the button. It all goes on the permanent record — we're keeping score and clowning every bit of it. 😈📈</p>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl" id="musicBtn">🎵 Music: OFF</button>
+        <button class="ctrl" id="soundBtn">🔊 SFX: ON</button>
       </div>
 
       <div class="arena">
@@ -318,10 +331,6 @@
 
     <div class="footer">
       <div class="foot-note">Built petty. Powered by spite. Receipts kept. ❄</div>
-      <div class="controls">
-        <button class="ctrl" id="musicBtn">🎵 Music: OFF</button>
-        <button class="ctrl" id="soundBtn">🔊 SFX: ON</button>
-      </div>
     </div>
   </div>
 
@@ -346,7 +355,7 @@ let dbRef = null;
 try {
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
-  dbRef = ref(db, "roastState"); // The global bucket we are saving into
+  dbRef = ref(db, "roastState"); 
 } catch(e) {
   console.warn("Firebase not setup yet. Using empty state.");
 }
@@ -366,9 +375,7 @@ const todayKey = () => { const d=new Date(); return d.getFullYear()+"-"+pad2(d.g
 const grandTotal = () => Object.values(state.byDate).reduce((a,b)=>a+b,0);
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// --- FIREBASE SYNC LOGIC ---
 if(dbRef) {
-  // This listens for updates. If your friend clicks the button, this triggers automatically on YOUR screen!
   onValue(dbRef, (snapshot) => {
     if (snapshot.exists()) {
       state = snapshot.val();
@@ -379,7 +386,6 @@ if(dbRef) {
       renderAll();
       updateMascot();
       
-      // If the total went up and it wasn't you who clicked it, pop the counter anyway!
       if(newTotal > lastRenderedTotal) {
         const c=$("count"); 
         c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop");
@@ -389,12 +395,10 @@ if(dbRef) {
   });
 }
 
-// Function to push new state globally
 function save(){ 
   if(dbRef) { set(dbRef, state); } 
 }
 
-// --- UI LOGIC ---
 function renderCount(){
   const c=$("count"); c.textContent=grandTotal();
 }
@@ -532,7 +536,6 @@ function hit(){
   const tk=todayKey(); state.byDate[tk]=(state.byDate[tk]||0)+1;
   combo++; clearTimeout(comboTimer); comboTimer=setTimeout(()=>combo=0,1500);
   
-  // Animate Local Screen
   const b=$("burst"); b.classList.add("flash"); setTimeout(()=>b.classList.remove("flash"),220);
   const c=$("count"); c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop");
   const m=$("mascot"); m.classList.remove("bonk"); void m.offsetWidth; m.classList.add("bonk");
@@ -542,7 +545,7 @@ function hit(){
   spawnSticker(state.insults[Math.floor(Math.random()*state.insults.length)]||"ROASTED",false);
   
   showCombo(); hitSfx(); 
-  save(); // Send to Firebase immediately!
+  save(); 
 }
 function undo(){
   const tk=todayKey();
@@ -573,61 +576,14 @@ let bgSong=null;
 function startMusic(){ musicOn=true; if(!bgSong){ bgSong=new Audio(BG_SONG_URL); bgSong.loop=true; bgSong.volume=0.4; } try{ bgSong.currentTime=0; const p=bgSong.play(); if(p&&p.catch) p.catch(()=>startSynthMusic()); } catch(e){ startSynthMusic(); } }
 function stopMusic(){ musicOn=false; if(bgSong) bgSong.pause(); stopSynthMusic(); }
 
-// Startup Event Listeners
 $("smash").addEventListener("click",hit);
 $("undo").addEventListener("click",undo);
 document.addEventListener("keydown",e=>{ if((e.key==="+"||e.key==="=")&&document.activeElement.tagName!=="INPUT"){ e.preventDefault(); hit(); } });
 const sb=$("soundBtn"); sb.textContent="🔊 SFX: "+(state.sound?"ON":"OFF");
 sb.addEventListener("click",()=>{ state.sound=!state.sound; sb.textContent="🔊 SFX: "+(state.sound?"ON":"OFF"); save(); if(state.sound) hitSfx(); });
-
-// --- FIRST VISIT AUTOMATIC MUSIC LOGIC ---
 const mb=$("musicBtn");
-let musicStarted = false;
+mb.addEventListener("click",()=>{ if(musicOn){ stopMusic(); mb.textContent="🎵 Music: OFF"; } else { startMusic(); mb.textContent="🎵 Music: ON"; } });
 
-// 1. Force music button to say ON by default on layout initialization
-mb.textContent = "🎵 Music: ON";
-musicOn = true;
-
-// 2. Setup a trigger helper to handle browser permission safely on user interaction
-const triggerMusicOnInteraction = () => {
-  // CRITICAL FIX: Synchronously unlock the audio engine right here while we have the user's direct click token
-  try { ensureCtx(); } catch(err) { console.warn(err); }
-
-  if (musicOn && !musicStarted) {
-    musicStarted = true;
-    startMusic();
-  }
-  // Clear the event tracking immediately so this loop only fires once per visit
-  document.removeEventListener("click", triggerMusicOnInteraction);
-  document.removeEventListener("keydown", triggerMusicOnInteraction);
-};
-
-// 3. Listen everywhere on the window frame to snatch the initial permission token
-document.addEventListener("click", triggerMusicOnInteraction);
-document.addEventListener("keydown", triggerMusicOnInteraction);
-
-// 4. Handle traditional, isolated manual toggles via the status button layout
-mb.addEventListener("click",(e)=>{
-  e.stopPropagation(); // Stop the event from triggering the document-wide listener above
-  
-  // CRITICAL FIX: If it says ON but hasn't actually started playing yet, make this first click start it immediately!
-  if (musicOn && !musicStarted) {
-    try { ensureCtx(); } catch(err){}
-    startMusic();
-    musicStarted = true;
-    mb.textContent="🎵 Music: ON";
-  } else if(musicOn){ 
-    stopMusic(); 
-    mb.textContent="🎵 Music: OFF"; 
-  } else { 
-    try { ensureCtx(); } catch(err){}
-    startMusic(); 
-    musicStarted = true;
-    mb.textContent="🎵 Music: ON"; 
-  }
-});
-
-// First initial render (before Firebase loads, just in case)
 renderAll(); updateMascot();
 </script>
 </body>
