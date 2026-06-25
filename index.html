@@ -319,7 +319,7 @@
     <div class="footer">
       <div class="foot-note">Built petty. Powered by spite. Receipts kept. ❄</div>
       <div class="controls">
-        <button class="ctrl" id="musicBtn">🎵 Music: ON</button>
+        <button class="ctrl" id="musicBtn">🎵 Music: OFF</button>
         <button class="ctrl" id="soundBtn">🔊 SFX: ON</button>
       </div>
     </div>
@@ -556,7 +556,7 @@ function undo(){
   }
 }
 
-let musicOn=false, musicStep=0, musicTimer=null, musMaster=null;
+let musicOn=true, musicStep=0, musicTimer=null, musMaster=null;
 const F={C2:65.41,F2:87.31,G2:98,A2:110,C3:130.81,F3:174.61,G3:196,A3:220,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99,A5:880};
 const BASS=[F.C2,0,F.C3,0, F.A2,0,F.A3,0, F.F2,0,F.F3,0, F.G2,0,F.G3,0];
 const LEAD=[F.C5,F.E5,F.G5,F.E5, F.C5,F.E5,F.A5,F.E5, F.A4,F.C5,F.F5,F.C5, F.B4,F.D5,F.G5,F.D5];
