@@ -590,9 +590,12 @@ musicOn = true;
 
 // 2. Setup a trigger helper to handle browser permission safely on user interaction
 const triggerMusicOnInteraction = () => {
+  // CRITICAL FIX: Synchronously unlock the audio engine right here while we have the user's direct click token
+  try { ensureCtx(); } catch(err) { console.warn(err); }
+
   if (musicOn && !musicStarted) {
-    startMusic();
     musicStarted = true;
+    startMusic();
   }
   // Clear the event tracking immediately so this loop only fires once per visit
   document.removeEventListener("click", triggerMusicOnInteraction);
@@ -606,10 +609,18 @@ document.addEventListener("keydown", triggerMusicOnInteraction);
 // 4. Handle traditional, isolated manual toggles via the status button layout
 mb.addEventListener("click",(e)=>{
   e.stopPropagation(); // Stop the event from triggering the document-wide listener above
-  if(musicOn){ 
+  
+  // CRITICAL FIX: If it says ON but hasn't actually started playing yet, make this first click start it immediately!
+  if (musicOn && !musicStarted) {
+    try { ensureCtx(); } catch(err){}
+    startMusic();
+    musicStarted = true;
+    mb.textContent="🎵 Music: ON";
+  } else if(musicOn){ 
     stopMusic(); 
     mb.textContent="🎵 Music: OFF"; 
   } else { 
+    try { ensureCtx(); } catch(err){}
     startMusic(); 
     musicStarted = true;
     mb.textContent="🎵 Music: ON"; 
