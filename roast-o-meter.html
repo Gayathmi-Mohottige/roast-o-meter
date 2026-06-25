@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ROAST-O-METER 9000</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Luckiest+Guy&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#140a16;
+    --paper:#FFF6E6;
+    --pink:#FF4FA3;
+    --yellow:#FFD23F;
+    --blue:#33B5FF;
+    --grape:#9B4DFF;
+    --lime:#37E089;
+    --orange:#FF8A2B;
+    --red:#FF4D52;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+
+  body{
+    font-family:"Fredoka", system-ui, sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    position:relative;
+    overflow-x:hidden;
+    background:
+      radial-gradient(rgba(255,255,255,0.16) 1.6px, transparent 1.7px) 0 0 / 15px 15px,
+      linear-gradient(150deg, #FF5BA0 0%, #FF7A3D 24%, #FFD23F 46%, #37E089 70%, #33B5FF 100%);
+  }
+
+  .wrap{ position:relative; z-index:2; max-width:920px; margin:0 auto; padding:30px 16px 70px; }
+
+  /* sunburst behind hero */
+  .hero{ position:relative; padding:26px 0 8px; }
+  .hero::before{
+    content:""; position:absolute; left:50%; top:46%;
+    width:160vw; height:160vw; max-width:1300px; max-height:1300px;
+    transform:translate(-50%,-50%);
+    background:repeating-conic-gradient(from 0deg, rgba(255,255,255,0) 0deg 11deg, rgba(255,255,255,0.32) 11deg 22deg);
+    z-index:-1; opacity:.75;
+    animation:spin 60s linear infinite;
+    -webkit-mask:radial-gradient(circle, #000 60%, transparent 72%);
+            mask:radial-gradient(circle, #000 60%, transparent 72%);
+  }
+  @keyframes spin{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
+
+  /* header */
+  .kicker{
+    display:inline-block;
+    font-family:"Bangers", cursive; letter-spacing:.06em;
+    font-size:15px; color:#fff;
+    background:var(--pink);
+    border:3px solid var(--ink);
+    padding:5px 14px; border-radius:999px;
+    transform:rotate(-3deg);
+    box-shadow:4px 4px 0 var(--ink);
+    margin-bottom:14px;
+  }
+  .title-block{ text-align:center; }
+  h1{
+    font-family:"Luckiest Guy", cursive;
+    font-size:clamp(44px, 12vw, 104px);
+    line-height:.9;
+    color:var(--pink);
+    -webkit-text-stroke:clamp(2px,1vw,5px) var(--ink);
+    paint-order:stroke fill;
+    text-shadow:6px 7px 0 var(--ink);
+    transform:rotate(-2deg);
+    margin:4px 0 8px;
+  }
+  h1 .nine{ color:var(--blue); display:inline-block; transform:rotate(4deg); }
+  .pitch{
+    font-weight:600; font-size:clamp(15px,3.4vw,19px);
+    max-width:560px; margin:14px auto 0;
+    background:#fff; color:var(--ink);
+    border:3px solid var(--ink); border-radius:18px;
+    padding:12px 18px; box-shadow:5px 5px 0 var(--ink);
+    transform:rotate(.6deg);
+  }
+  .pitch b{ background:var(--yellow); padding:0 4px; border-radius:4px; }
+
+  /* mascot + counter row */
+  .arena{ display:flex; flex-direction:column; align-items:center; position:relative; margin-top:26px; }
+
+  .mascot-wrap{ position:relative; display:flex; flex-direction:column; align-items:center; margin-bottom:6px; }
+  .speech{
+    position:relative;
+    background:#fff; border:3px solid var(--ink); border-radius:16px;
+    padding:8px 14px; font-weight:700; font-size:15px;
+    box-shadow:4px 4px 0 var(--ink);
+    margin-bottom:10px; max-width:280px; text-align:center;
+    transform:rotate(-1.5deg);
+  }
+  .speech::after{
+    content:""; position:absolute; bottom:-13px; left:42px;
+    width:18px; height:18px; background:#fff;
+    border-right:3px solid var(--ink); border-bottom:3px solid var(--ink);
+    transform:rotate(45deg);
+  }
+  #mascot{ width:clamp(96px,26vw,150px); height:auto; filter:drop-shadow(4px 5px 0 rgba(0,0,0,.35)); }
+  #mascot.bonk{ animation:bonk .4s ease; }
+  @keyframes bonk{ 0%{transform:translateY(0) rotate(0)} 25%{transform:translateY(6px) scale(1.08,.92) rotate(-4deg)} 60%{transform:translateY(-4px) scale(.96,1.06) rotate(3deg)} 100%{transform:translateY(0)} }
+
+  /* starburst counter */
+  .burst{ position:relative; width:clamp(220px,70vw,320px); height:clamp(220px,70vw,320px); display:grid; place-items:center; margin:2px 0 0; }
+  .burst .ink, .burst .fill{
+    position:absolute; inset:0;
+    clip-path:polygon(50% 0%,61% 12%,77% 7%,78% 24%,95% 25%,86% 40%,100% 50%,86% 60%,95% 75%,78% 76%,77% 93%,61% 88%,50% 100%,39% 88%,23% 93%,22% 76%,5% 75%,14% 60%,0% 50%,14% 40%,5% 25%,22% 24%,23% 7%,39% 12%);
+  }
+  .burst .ink{ background:var(--ink); transform:scale(1.04); }
+  .burst .fill{ background:radial-gradient(circle at 50% 38%, #6FD0FF, var(--blue) 70%); }
+  .burst.flash .fill{ background:radial-gradient(circle at 50% 38%, #FFF, var(--yellow) 70%); }
+  .burst .count{
+    position:relative; z-index:2;
+    font-family:"Luckiest Guy", cursive;
+    font-size:clamp(58px, 17vw, 96px);
+    color:#fff; -webkit-text-stroke:3px var(--ink); paint-order:stroke fill;
+    text-shadow:3px 4px 0 rgba(0,0,0,.25);
+    line-height:1;
+  }
+  .burst .count.pop{ animation:pop .35s cubic-bezier(.2,1.6,.3,1); }
+  @keyframes pop{ 0%{transform:scale(.5) rotate(-8deg)} 60%{transform:scale(1.18) rotate(3deg)} 100%{transform:scale(1)} }
+  .burst .ribbon{
+    position:absolute; z-index:3; bottom:14%; left:50%; transform:translateX(-50%) rotate(-3deg);
+    font-family:"Bangers", cursive; letter-spacing:.05em; font-size:14px;
+    background:var(--pink); color:#fff; border:3px solid var(--ink);
+    padding:3px 12px; border-radius:999px; box-shadow:3px 3px 0 var(--ink); white-space:nowrap;
+  }
+
+  /* big button */
+  .smash{
+    position:relative; margin-top:18px; border:4px solid var(--ink); cursor:pointer;
+    font-family:"Luckiest Guy", cursive; font-size:clamp(26px,6.5vw,40px);
+    color:#fff; -webkit-text-stroke:1.5px var(--ink); paint-order:stroke fill;
+    background:var(--red); padding:20px 40px 16px; border-radius:22px;
+    box-shadow:0 9px 0 var(--ink), 0 9px 0 6px rgba(0,0,0,.12);
+    transition:transform .06s ease, box-shadow .06s ease, background .2s;
+    transform:rotate(-1deg);
+  }
+  .smash:hover{ background:#FF6166; }
+  .smash:active{ transform:translateY(8px) rotate(-1deg); box-shadow:0 1px 0 var(--ink); }
+  .smash small{
+    display:block; font-family:"Fredoka",sans-serif; font-weight:700; -webkit-text-stroke:0;
+    color:#fff; font-size:12px; margin-top:6px; letter-spacing:.02em; text-shadow:1px 1px 0 rgba(0,0,0,.3);
+  }
+  .undo{
+    margin-top:14px; background:#fff; border:3px solid var(--ink); cursor:pointer;
+    font-family:"Fredoka",sans-serif; font-weight:700; font-size:13px;
+    padding:7px 14px; border-radius:999px; box-shadow:3px 3px 0 var(--ink);
+    transform:rotate(1deg);
+  }
+  .undo:active{ transform:translate(2px,2px) rotate(1deg); box-shadow:1px 1px 0 var(--ink); }
+
+  /* combo + bursts layer */
+  .combo{
+    position:absolute; left:50%; top:-2px; transform:translate(-50%,-50%);
+    font-family:"Bangers", cursive; letter-spacing:.04em;
+    font-size:clamp(28px,8vw,52px); color:var(--yellow);
+    -webkit-text-stroke:3px var(--ink); paint-order:stroke fill;
+    text-shadow:4px 4px 0 var(--ink);
+    opacity:0; pointer-events:none; z-index:30; white-space:nowrap;
+  }
+  .combo.show{ animation:comboPop .8s ease-out; }
+  @keyframes comboPop{ 0%{opacity:0;transform:translate(-50%,-30%) scale(.4) rotate(-10deg)} 30%{opacity:1;transform:translate(-50%,-60%) scale(1.15) rotate(4deg)} 75%{opacity:1;transform:translate(-50%,-70%) scale(1) rotate(-2deg)} 100%{opacity:0;transform:translate(-50%,-110%) scale(1)} }
+
+  .fxlayer{ position:absolute; inset:0; pointer-events:none; overflow:visible; z-index:20; }
+  .sticker{
+    position:absolute;
+    font-family:"Bangers", cursive; letter-spacing:.03em;
+    color:#fff; -webkit-text-stroke:2.5px var(--ink); paint-order:stroke fill;
+    text-shadow:3px 3px 0 var(--ink);
+    white-space:nowrap; will-change:transform,opacity;
+  }
+  .confetti{ position:absolute; width:12px; height:14px; border:2px solid var(--ink); will-change:transform,opacity; z-index:25; }
+
+  /* stats */
+  .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:40px; }
+  .stat{
+    background:#fff; border:4px solid var(--ink); border-radius:20px;
+    padding:16px 8px; text-align:center; box-shadow:5px 6px 0 var(--ink);
+  }
+  .stat:nth-child(1){ transform:rotate(-2deg); }
+  .stat:nth-child(2){ transform:rotate(1.5deg); background:var(--yellow); }
+  .stat:nth-child(3){ transform:rotate(-1deg); }
+  .stat .v{ font-family:"Luckiest Guy",cursive; font-size:clamp(28px,7vw,46px); color:var(--grape); -webkit-text-stroke:1.5px var(--ink); paint-order:stroke fill; line-height:1; }
+  .stat:nth-child(2) .v{ color:var(--red); }
+  .stat .k{ font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.04em; margin-top:8px; }
+
+  /* section heads */
+  .head{
+    display:inline-block; font-family:"Bangers",cursive; letter-spacing:.04em;
+    font-size:clamp(24px,6vw,38px); color:#fff;
+    -webkit-text-stroke:2px var(--ink); paint-order:stroke fill;
+    background:var(--grape); border:4px solid var(--ink);
+    padding:6px 18px; border-radius:14px; box-shadow:5px 5px 0 var(--ink);
+    margin:50px 0 22px; transform:rotate(-1.5deg);
+  }
+  .head.b2{ background:var(--lime); }
+
+  /* ledger */
+  .ledger{ display:flex; flex-direction:column; gap:14px; }
+  .card{
+    display:grid; grid-template-columns:118px 1fr auto; align-items:center; gap:14px;
+    background:#fff; border:4px solid var(--ink); border-radius:18px;
+    padding:14px 16px; box-shadow:5px 5px 0 var(--ink);
+  }
+  .card:nth-child(even){ transform:rotate(.5deg); }
+  .card:nth-child(odd){ transform:rotate(-.5deg); }
+  .card.today{ background:var(--yellow); }
+  .card .day{ font-weight:700; font-size:14px; line-height:1.15; }
+  .card .day .tag{ display:inline-block; font-family:"Bangers",cursive; font-size:12px; background:var(--pink); color:#fff; border:2px solid var(--ink); border-radius:6px; padding:1px 7px; margin-bottom:3px; }
+  .track{ height:20px; border:3px solid var(--ink); border-radius:11px; background:#fff; overflow:hidden; }
+  .fill2{ height:100%; width:0%; background:repeating-linear-gradient(45deg, var(--blue) 0 10px, #6FD0FF 10px 20px); transition:width .6s cubic-bezier(.2,.8,.2,1); }
+  .card.worst .fill2{ background:repeating-linear-gradient(45deg, var(--red) 0 10px, #FF8084 10px 20px); }
+  .card .n{ font-family:"Luckiest Guy",cursive; font-size:24px; -webkit-text-stroke:1px var(--ink); paint-order:stroke fill; color:var(--grape); min-width:46px; text-align:right; display:flex; align-items:center; gap:8px; justify-content:flex-end; }
+  .badge{ font-family:"Bangers",cursive; font-size:11px; letter-spacing:.04em; color:#fff; background:var(--red); border:2px solid var(--ink); border-radius:6px; padding:2px 7px; }
+  .empty{ background:#fff; border:4px dashed var(--ink); border-radius:18px; padding:26px; text-align:center; font-weight:600; box-shadow:5px 5px 0 var(--ink); }
+
+  /* insult bank */
+  .bank{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+  .chip{
+    display:inline-flex; align-items:center; gap:8px;
+    font-weight:700; font-size:15px; color:var(--ink);
+    border:3px solid var(--ink); border-radius:999px; padding:7px 10px 7px 16px;
+    box-shadow:3px 3px 0 var(--ink);
+  }
+  .chip:nth-child(6n+1){ background:var(--pink); color:#fff; }
+  .chip:nth-child(6n+2){ background:var(--blue); color:#fff; }
+  .chip:nth-child(6n+3){ background:var(--lime); }
+  .chip:nth-child(6n+4){ background:var(--orange); color:#fff; }
+  .chip:nth-child(6n+5){ background:var(--grape); color:#fff; }
+  .chip:nth-child(6n){ background:var(--yellow); }
+  .chip button{ border:none; background:rgba(0,0,0,.25); color:#fff; cursor:pointer; width:18px; height:18px; border-radius:50%; font-size:13px; line-height:1; display:grid; place-items:center; }
+  .add{ display:inline-flex; align-items:center; border:3px dashed var(--ink); border-radius:999px; background:#fff; box-shadow:3px 3px 0 var(--ink); }
+  .add input{ border:none; outline:none; background:none; font-family:"Fredoka",sans-serif; font-weight:600; font-size:15px; padding:8px 6px 8px 16px; width:160px; }
+  .add button{ border:none; cursor:pointer; background:var(--ink); color:#fff; font-family:"Bangers",cursive; letter-spacing:.04em; font-size:15px; padding:9px 16px; border-radius:0 999px 999px 0; }
+
+  /* footer */
+  .footer{ margin-top:50px; display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; align-items:center; }
+  .foot-note{ font-weight:700; font-size:13px; background:#fff; border:3px solid var(--ink); border-radius:999px; padding:7px 14px; box-shadow:3px 3px 0 var(--ink); transform:rotate(-1deg); }
+  .controls{ display:flex; gap:10px; flex-wrap:wrap; }
+  .ctrl{ font-family:"Fredoka",sans-serif; font-weight:700; font-size:13px; background:#fff; border:3px solid var(--ink); border-radius:999px; padding:8px 16px; cursor:pointer; box-shadow:3px 3px 0 var(--ink); }
+  .ctrl:active{ transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink); }
+  .ctrl.armed{ background:var(--red); color:#fff; }
+
+  .toast{
+    position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(18px);
+    background:var(--ink); color:#fff; font-weight:600; font-size:14px;
+    padding:12px 18px; border-radius:14px; box-shadow:5px 5px 0 rgba(0,0,0,.3);
+    opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; z-index:60;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .shake{ animation:shake .4s cubic-bezier(.36,.07,.19,.97); }
+  @keyframes shake{ 10%,90%{transform:translate(-1px,0)} 20%,80%{transform:translate(3px,-1px)} 30%,50%,70%{transform:translate(-5px,2px)} 40%,60%{transform:translate(5px,-1px)} }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="title-block">
+        <span class="kicker">the petty scoreboard · every roast goes on the global record</span>
+        <h1>ROAST-O-METER<br><span class="nine">9000</span></h1>
+        <p class="pitch">Somebody talked junk? <b>SMASH</b> the button. It all goes on the permanent record — we're keeping score and clowning every bit of it. 😈📈</p>
+      </div>
+
+      <div class="arena">
+        <div class="mascot-wrap">
+          <div class="speech" id="speech">go on, say something. it's going on the board. 😈</div>
+          <svg id="mascot" viewBox="0 0 120 120" aria-hidden="true">
+            <rect x="14" y="14" width="92" height="92" rx="18" fill="#7FD4FF" stroke="#140a16" stroke-width="6"/>
+            <rect x="24" y="22" width="26" height="20" rx="8" fill="#CFefff" opacity="0.9"/>
+            <line id="browL" x1="34" y1="50" x2="52" y2="46" stroke="#140a16" stroke-width="6" stroke-linecap="round"/>
+            <line id="browR" x1="68" y1="46" x2="86" y2="50" stroke="#140a16" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="44" cy="62" r="6" fill="#140a16"/>
+            <circle cx="76" cy="62" r="6" fill="#140a16"/>
+            <path id="mouth" d="M42 84 Q60 76 78 84" fill="none" stroke="#140a16" stroke-width="6" stroke-linecap="round"/>
+            <g id="anger" opacity="0"><path d="M92 26 l8 -6 l-3 9 l8 -3 l-7 7" fill="none" stroke="var(--red)" stroke-width="4" stroke-linecap="round"/></g>
+            <path id="sweat" opacity="0" d="M100 44 q6 8 0 12 q-6 -4 0 -12 z" fill="#7FD4FF" stroke="#140a16" stroke-width="3"/>
+          </svg>
+        </div>
+
+        <div class="combo" id="combo"></div>
+
+        <div class="burst" id="burst">
+          <div class="ink"></div>
+          <div class="fill"></div>
+          <div class="count" id="count">0</div>
+          <div class="ribbon">official roast count</div>
+        </div>
+
+        <button class="smash" id="smash">
+          GET ROASTED!
+          <small>smash it the second a roast lands 💥</small>
+        </button>
+        <button class="undo" id="undo">oops, miscount — take one back</button>
+
+        <div class="fxlayer" id="fx"></div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="v" id="stToday">0</div><div class="k">Today's tally</div></div>
+      <div class="stat"><div class="v" id="stWorst">0</div><div class="k">Record day 🏆</div></div>
+      <div class="stat"><div class="v" id="stDays">0</div><div class="k">Days keeping score</div></div>
+    </div>
+
+    <span class="head">The Evidence 📋</span>
+    <div class="ledger" id="ledger"></div>
+
+    <span class="head b2">Nickname Hall of Fame</span>
+    <p class="pitch" style="text-align:left;margin:0 0 18px;transform:rotate(-.4deg);max-width:none;">These fly across the screen on every smash. Add every cursed nickname that gets thrown around — both directions welcome. 👇</p>
+    <div class="bank" id="bank"></div>
+
+    <div class="footer">
+      <div class="foot-note">Built petty. Powered by spite. Receipts kept. ❄</div>
+      <div class="controls">
+        <button class="ctrl" id="musicBtn">🎵 Music: OFF</button>
+        <button class="ctrl" id="soundBtn">🔊 SFX: ON</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAz_WovbglTy6ZISIDg-PTnIZPtC3ox-dg",
+  authDomain: "roast-o-meter.firebaseapp.com",
+  databaseURL: "https://roast-o-meter-default-rtdb.firebaseio.com",
+  projectId: "roast-o-meter",
+  storageBucket: "roast-o-meter.firebasestorage.app",
+  messagingSenderId: "81462744455",
+  appId: "1:81462744455:web:e48eee07afb46f0302ef22",
+  measurementId: "G-X7G85B566S"
+};
+
+let dbRef = null;
+try {
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  dbRef = ref(db, "roastState"); // The global bucket we are saving into
+} catch(e) {
+  console.warn("Firebase not setup yet. Using empty state.");
+}
+
+const DEFAULT_INSULTS = ["ICEKARAYA","ICE PEOPLE","KALAKANNIYA","LAZY","QA ISN'T ENGINEERING","WORKS ON MY MACHINE","JUST A SMALL FIX","NOT A BUG, A FEATURE","DID YOU CLEAR CACHE?"];
+const ONOMATOPOEIA = ["POW!","BONK!","BAM!","OOF!","SMACK!","WHAM!","RUDE!","YIKES!"];
+const GRUMP_LINES = ["ohhh, straight to the record. 📝","logged. forever. no take-backs.","that's going in the highlight reel.","tally up, clown.","the scoreboard remembers everything.","both sides cooking, both sides counted.","screenshot energy. noted.","another one for the trophy case.","keep talking, keep the number climbing.","the receipts are STACKING.","petty? we prefer 'thorough'.","chef's kiss. on the record it goes."];
+const COLORS = ["#FF4FA3","#FFD23F","#33B5FF","#9B4DFF","#37E089","#FF8A2B","#FF4D52"];
+
+let state = { byDate:{}, insults:[...DEFAULT_INSULTS], sound:true };
+let combo=0, comboTimer=null;
+let lastRenderedTotal = 0;
+
+const $ = id => document.getElementById(id);
+const pad2 = n => String(n).padStart(2,"0");
+const todayKey = () => { const d=new Date(); return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate()); };
+const grandTotal = () => Object.values(state.byDate).reduce((a,b)=>a+b,0);
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// --- FIREBASE SYNC LOGIC ---
+if(dbRef) {
+  // This listens for updates. If your friend clicks the button, this triggers automatically on YOUR screen!
+  onValue(dbRef, (snapshot) => {
+    if (snapshot.exists()) {
+      state = snapshot.val();
+      if(!state.byDate) state.byDate = {};
+      if(!state.insults) state.insults = [...DEFAULT_INSULTS];
+      
+      const newTotal = grandTotal();
+      renderAll();
+      updateMascot();
+      
+      // If the total went up and it wasn't you who clicked it, pop the counter anyway!
+      if(newTotal > lastRenderedTotal) {
+        const c=$("count"); 
+        c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop");
+      }
+      lastRenderedTotal = newTotal;
+    }
+  });
+}
+
+// Function to push new state globally
+function save(){ 
+  if(dbRef) { set(dbRef, state); } 
+}
+
+// --- UI LOGIC ---
+function renderCount(){
+  const c=$("count"); c.textContent=grandTotal();
+}
+function renderStats(){
+  $("stToday").textContent=state.byDate[todayKey()]||0;
+  const v=Object.values(state.byDate);
+  $("stWorst").textContent=v.length?Math.max(...v):0;
+  $("stDays").textContent=Object.keys(state.byDate).length;
+}
+function fmtDate(k){ const [y,m,d]=k.split("-").map(Number); return new Date(y,m-1,d).toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}); }
+function renderLedger(){
+  const el=$("ledger"); const keys=Object.keys(state.byDate).sort().reverse();
+  if(!keys.length){ el.innerHTML='<div class="empty">No roasts logged yet. Suspicious. Give them five minutes. 🍿</div>'; return; }
+  const max=Math.max(...keys.map(k=>state.byDate[k])); const tk=todayKey();
+  el.innerHTML=keys.map(k=>{ const n=state.byDate[k],isT=k===tk,isW=n===max&&max>0,pct=max>0?Math.max(8,Math.round(n/max*100)):0;
+    return '<div class="card '+(isT?"today ":"")+(isW?"worst":"")+'"><div class="day">'+(isT?'<span class="tag">TODAY</span><br>':'')+fmtDate(k)+'</div><div class="track"><div class="fill2" style="width:'+pct+'%"></div></div><div class="n">'+(isW?'<span class="badge">WORST</span>':'')+n+'</div></div>';
+  }).join("");
+}
+function esc(s){ return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function renderBank(){
+  const el=$("bank");
+  el.innerHTML=state.insults.map((t,i)=>'<span class="chip">'+esc(t)+'<button data-i="'+i+'" aria-label="remove">×</button></span>').join("")
+    +'<span class="chip add"><input id="newI" placeholder="add a dumb nickname…" maxlength="36"><button id="addI">ADD</button></span>';
+  el.querySelectorAll(".chip button[data-i]").forEach(b=>b.onclick=()=>{ state.insults.splice(+b.dataset.i,1); save(); });
+  const inp=$("newI"),add=()=>{ const v=inp.value.trim(); if(v){ state.insults.push(v.toUpperCase()); save(); requestAnimationFrame(()=>$("newI").focus()); } };
+  $("addI").onclick=add; inp.onkeydown=e=>{ if(e.key==="Enter") add(); };
+}
+function renderAll(){ renderCount(); renderStats(); renderLedger(); renderBank(); }
+
+function updateMascot(){
+  const n=state.byDate[todayKey()]||0;
+  const mouth=$("mouth"),browL=$("browL"),browR=$("browR"),anger=$("anger"),sweat=$("sweat");
+  if(n>=10){ mouth.setAttribute("d","M42 88 Q60 74 78 88"); browL.setAttribute("y2","42"); browR.setAttribute("y2","42"); anger.setAttribute("opacity","1"); sweat.setAttribute("opacity","1"); }
+  else if(n>=4){ mouth.setAttribute("d","M42 86 Q60 80 78 86"); browL.setAttribute("y2","45"); browR.setAttribute("y2","45"); anger.setAttribute("opacity","1"); sweat.setAttribute("opacity","0"); }
+  else { mouth.setAttribute("d","M42 84 Q60 78 78 84"); browL.setAttribute("y2","46"); browR.setAttribute("y2","46"); anger.setAttribute("opacity","0"); sweat.setAttribute("opacity","0"); }
+}
+
+function spawnSticker(text,big){
+  if(reduceMotion) return;
+  const fx=$("fx"); if(fx.children.length>9) fx.removeChild(fx.firstChild);
+  const s=document.createElement("div"); s.className="sticker"; s.textContent=text;
+  s.style.color=COLORS[Math.floor(Math.random()*COLORS.length)];
+  s.style.fontSize=(big?44:26)+Math.random()*14+"px";
+  const x=50+(Math.random()*46-23), rot=Math.random()*30-15;
+  s.style.left=x+"%"; s.style.top="34%"; fx.appendChild(s);
+  const dx=Math.random()*120-60, dy=-(70+Math.random()*120);
+  s.animate([
+    {transform:"translate(-50%,-50%) rotate("+rot+"deg) scale(.3)",opacity:0},
+    {transform:"translate(-50%,-62%) rotate("+rot+"deg) scale(1.2)",opacity:1,offset:.22},
+    {transform:"translate(calc(-50% + "+dx+"px),calc(-50% + "+dy+"px)) rotate("+rot*1.5+"deg) scale(1)",opacity:1,offset:.7},
+    {transform:"translate(calc(-50% + "+dx*1.3+"px),calc(-50% + "+dy*1.4+"px)) rotate("+rot*2+"deg) scale(.9)",opacity:0}
+  ],{duration:1100,easing:"cubic-bezier(.2,.7,.3,1)"}).onfinish=()=>s.remove();
+}
+function confettiBurst(amount){
+  if(reduceMotion) return;
+  const fx=$("fx");
+  for(let i=0;i<amount;i++){
+    const p=document.createElement("div"); p.className="confetti";
+    p.style.background=COLORS[Math.floor(Math.random()*COLORS.length)];
+    p.style.left=(45+Math.random()*10)+"%"; p.style.top="62%"; fx.appendChild(p);
+    const dx=Math.random()*340-170, dy=-(120+Math.random()*160), rot=Math.random()*720-360;
+    p.animate([
+      {transform:"translate(0,0) rotate(0)",opacity:1},
+      {transform:"translate("+dx+"px,"+dy+"px) rotate("+rot+"deg)",opacity:1,offset:.6},
+      {transform:"translate("+dx*1.2+"px,"+(dy+260)+"px) rotate("+rot*1.4+"deg)",opacity:0}
+    ],{duration:1300,easing:"cubic-bezier(.2,.6,.4,1)"}).onfinish=()=>p.remove();
+  }
+}
+const COMBO_TIERS=[{min:14,t:"CALL HR!!!"},{min:10,t:"UNHINGED!"},{min:7,t:"THEY WON'T STOP!"},{min:4,t:"COMBO x"},{min:2,t:"OUCH x"}];
+function showCombo(){
+  if(combo<2) return;
+  const tier=COMBO_TIERS.find(t=>combo>=t.min);
+  const el=$("combo"); el.textContent=tier.t.endsWith("x")?tier.t+combo:tier.t;
+  el.style.color=combo>=10?"var(--red)":(combo>=7?"var(--pink)":"var(--yellow)");
+  el.classList.remove("show"); void el.offsetWidth; el.classList.add("show");
+  if(combo>=4) confettiBurst(combo>=10?22:12);
+}
+
+let actx=null;
+function ensureCtx(){ actx=actx||new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==="suspended") actx.resume(); return actx; }
+function vineBoom(){ const a=ensureCtx(),t=a.currentTime;
+  const o=a.createOscillator(),g=a.createGain(),lp=a.createBiquadFilter();
+  o.type="sine"; o.frequency.setValueAtTime(165,t); o.frequency.exponentialRampToValueAtTime(38,t+0.42);
+  lp.type="lowpass"; lp.frequency.value=950;
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.75,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+0.75);
+  o.connect(lp).connect(g).connect(a.destination); o.start(t); o.stop(t+0.8);
+  const o2=a.createOscillator(),g2=a.createGain(); o2.type="triangle"; o2.frequency.setValueAtTime(220,t); o2.frequency.exponentialRampToValueAtTime(60,t+0.06);
+  g2.gain.setValueAtTime(0.45,t); g2.gain.exponentialRampToValueAtTime(0.0001,t+0.08); o2.connect(g2).connect(a.destination); o2.start(t); o2.stop(t+0.09);
+}
+function boing(){ const a=ensureCtx(),t=a.currentTime; const o=a.createOscillator(),g=a.createGain();
+  o.type="triangle";
+  o.frequency.setValueAtTime(560,t); o.frequency.exponentialRampToValueAtTime(150,t+0.12);
+  o.frequency.exponentialRampToValueAtTime(330,t+0.22); o.frequency.exponentialRampToValueAtTime(170,t+0.34);
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.5,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+0.42);
+  o.connect(g).connect(a.destination); o.start(t); o.stop(t+0.44);
+}
+function airhorn(){ const a=ensureCtx(),t=a.currentTime; [233,311,466].forEach(f=>{
+  const o=a.createOscillator(),g=a.createGain(); o.type="sawtooth"; o.frequency.setValueAtTime(f,t);
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.16,t+0.03); g.gain.setValueAtTime(0.16,t+0.2); g.gain.exponentialRampToValueAtTime(0.0001,t+0.36);
+  const lfo=a.createOscillator(),lg=a.createGain(); lfo.frequency.value=11; lg.gain.value=7; lfo.connect(lg).connect(o.frequency); lfo.start(t); lfo.stop(t+0.36);
+  o.connect(g).connect(a.destination); o.start(t); o.stop(t+0.38);
+}); }
+function sadTrombone(){ const a=ensureCtx(); const t0=a.currentTime; [294,277,262,233].forEach((f,k)=>{
+  const o=a.createOscillator(),g=a.createGain(),lp=a.createBiquadFilter(); o.type="sawtooth"; lp.type="lowpass"; lp.frequency.value=1100;
+  const st=t0+k*0.17, dur=k===3?0.5:0.16;
+  o.frequency.setValueAtTime(f,st); if(k===3) o.frequency.linearRampToValueAtTime(f*0.93,st+dur);
+  g.gain.setValueAtTime(0.0001,st); g.gain.exponentialRampToValueAtTime(0.2,st+0.03); g.gain.exponentialRampToValueAtTime(0.0001,st+dur);
+  o.connect(lp).connect(g).connect(a.destination); o.start(st); o.stop(st+dur+0.02);
+}); }
+function synthSfx(){ try{
+  if(combo>=8 && Math.random()<0.5){ airhorn(); return; }
+  const r=Math.random();
+  if(r<0.52) vineBoom(); else if(r<0.76) boing(); else if(r<0.93) airhorn(); else sadTrombone();
+}catch(e){} }
+
+const CLICK_SOUNDS = [
+  "https://www.myinstants.com/media/sounds/faaah.mp3",
+  "https://www.myinstants.com/media/sounds/oh-my-god-meme.mp3",
+  "https://www.myinstants.com/media/sounds/vine-boom-sound-effect_KT89XIq.mp3",
+  "https://www.myinstants.com/media/sounds/movie_1_C2K5NH0.mp3"
+];
+const BG_SONG_URL = "https://www.myinstants.com/media/sounds/illegal-song-meme-not-actually-illegal.mp3";
+const clickAudio = CLICK_SOUNDS.map(u=>{ const a=new Audio(u); a.preload="auto"; a.volume=0.9; return a; });
+function hitSfx(){ if(!state.sound) return;
+  try{
+    const a=clickAudio[Math.floor(Math.random()*clickAudio.length)];
+    a.currentTime=0;
+    const p=a.play();
+    if(p&&p.catch) p.catch(()=>synthSfx());
+  }catch(e){ synthSfx(); }
+}
+function toast(m){ const e=$("toast"); e.textContent=m; e.classList.add("show"); clearTimeout(e._t); e._t=setTimeout(()=>e.classList.remove("show"),2600); }
+
+function hit(){
+  const tk=todayKey(); state.byDate[tk]=(state.byDate[tk]||0)+1;
+  combo++; clearTimeout(comboTimer); comboTimer=setTimeout(()=>combo=0,1500);
+  
+  // Animate Local Screen
+  const b=$("burst"); b.classList.add("flash"); setTimeout(()=>b.classList.remove("flash"),220);
+  const c=$("count"); c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop");
+  const m=$("mascot"); m.classList.remove("bonk"); void m.offsetWidth; m.classList.add("bonk");
+  $("speech").textContent=GRUMP_LINES[Math.floor(Math.random()*GRUMP_LINES.length)];
+  if(!reduceMotion){ const a=document.querySelector(".arena"); a.classList.remove("shake"); void a.offsetWidth; a.classList.add("shake"); }
+  spawnSticker(ONOMATOPOEIA[Math.floor(Math.random()*ONOMATOPOEIA.length)],true);
+  spawnSticker(state.insults[Math.floor(Math.random()*state.insults.length)]||"ROASTED",false);
+  
+  showCombo(); hitSfx(); 
+  save(); // Send to Firebase immediately!
+}
+function undo(){
+  const tk=todayKey();
+  if(state.byDate[tk]>0){ 
+    state.byDate[tk]--; 
+    if(!state.byDate[tk]) delete state.byDate[tk]; 
+    combo=0; 
+    save(); 
+  } else {
+    toast("nothing to undo today — suspiciously peaceful 😇");
+  }
+}
+
+let musicOn=false, musicStep=0, musicTimer=null, musMaster=null;
+const F={C2:65.41,F2:87.31,G2:98,A2:110,C3:130.81,F3:174.61,G3:196,A3:220,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99,A5:880};
+const BASS=[F.C2,0,F.C3,0, F.A2,0,F.A3,0, F.F2,0,F.F3,0, F.G2,0,F.G3,0];
+const LEAD=[F.C5,F.E5,F.G5,F.E5, F.C5,F.E5,F.A5,F.E5, F.A4,F.C5,F.F5,F.C5, F.B4,F.D5,F.G5,F.D5];
+const STEP_MS=115;
+function bassV(freq,t){ if(!freq) return; const o=actx.createOscillator(),g=actx.createGain(); o.type="triangle"; o.frequency.value=freq; g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.2,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+0.16); o.connect(g).connect(musMaster); o.start(t); o.stop(t+0.18); }
+function leadV(freq,t){ if(!freq) return; const o=actx.createOscillator(),g=actx.createGain(),lp=actx.createBiquadFilter(); o.type="sawtooth"; o.frequency.value=freq; lp.type="lowpass"; lp.frequency.value=2600; const lfo=actx.createOscillator(),lg=actx.createGain(); lfo.frequency.value=7; lg.gain.value=freq*0.013; lfo.connect(lg).connect(o.frequency); lfo.start(t); lfo.stop(t+0.12); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.1,t+0.008); g.gain.exponentialRampToValueAtTime(0.0001,t+0.11); o.connect(lp).connect(g).connect(musMaster); o.start(t); o.stop(t+0.13); }
+function tok(t){ const buf=actx.createBuffer(1,actx.sampleRate*0.025,actx.sampleRate),d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,4); const s=actx.createBufferSource(); s.buffer=buf; const bp=actx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=2000; bp.Q.value=2; const g=actx.createGain(); g.gain.value=0.14; s.connect(bp).connect(g).connect(musMaster); s.start(t); }
+function slideBoing(t){ const o=actx.createOscillator(),g=actx.createGain(); o.type="triangle"; o.frequency.setValueAtTime(720,t); o.frequency.exponentialRampToValueAtTime(180,t+0.18); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.12,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+0.2); o.connect(g).connect(musMaster); o.start(t); o.stop(t+0.22); }
+function musicTick(){ const t=actx.currentTime+0.03,i=musicStep%16; bassV(BASS[i],t); leadV(LEAD[i],t); if(i%4===0) tok(t); if(i===15&&Math.random()<0.45) slideBoing(t); musicStep++; }
+function startSynthMusic(){ actx=actx||new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==="suspended") actx.resume(); if(!musMaster){ musMaster=actx.createGain(); musMaster.gain.value=0.45; musMaster.connect(actx.destination); } musicStep=0; if(musicTimer) clearInterval(musicTimer); musicTick(); musicTick(); musicTimer=setInterval(musicTick,STEP_MS); }
+function stopSynthMusic(){ clearInterval(musicTimer); musicTimer=null; }
+
+let bgSong=null;
+function startMusic(){ musicOn=true; if(!bgSong){ bgSong=new Audio(BG_SONG_URL); bgSong.loop=true; bgSong.volume=0.4; } try{ bgSong.currentTime=0; const p=bgSong.play(); if(p&&p.catch) p.catch(()=>startSynthMusic()); } catch(e){ startSynthMusic(); } }
+function stopMusic(){ musicOn=false; if(bgSong) bgSong.pause(); stopSynthMusic(); }
+
+// Startup Event Listeners
+$("smash").addEventListener("click",hit);
+$("undo").addEventListener("click",undo);
+document.addEventListener("keydown",e=>{ if((e.key==="+"||e.key==="=")&&document.activeElement.tagName!=="INPUT"){ e.preventDefault(); hit(); } });
+const sb=$("soundBtn"); sb.textContent="🔊 SFX: "+(state.sound?"ON":"OFF");
+sb.addEventListener("click",()=>{ state.sound=!state.sound; sb.textContent="🔊 SFX: "+(state.sound?"ON":"OFF"); save(); if(state.sound) hitSfx(); });
+const mb=$("musicBtn");
+mb.addEventListener("click",()=>{ if(musicOn){ stopMusic(); mb.textContent="🎵 Music: OFF"; } else { startMusic(); mb.textContent="🎵 Music: ON"; } });
+
+// First initial render (before Firebase loads, just in case)
+renderAll(); updateMascot();
+</script>
+</body>
+</html>
